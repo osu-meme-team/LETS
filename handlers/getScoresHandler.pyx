@@ -65,7 +65,7 @@ class handler(requestsManager.asyncRequestHandler):
 					userUtils.setAqn(userID)
 
 			# Scoreboard type
-			isDonor = userUtils.getPrivileges(userID) & privileges.USER_DONOR > 0
+			isDonor = True # userUtils.getPrivileges(userID) & privileges.USER_DONOR > 0
 			country = False
 			friends = False
 			modsFilter = -1

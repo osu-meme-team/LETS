@@ -213,15 +213,17 @@ class score:
 
 			# No duplicates found.
 			# Get right "completed" value
-			personalBest = glob.db.fetch("SELECT id, score FROM scores WHERE userid = %s AND beatmap_md5 = %s AND play_mode = %s AND completed = 3 LIMIT 1", [userID, self.fileMd5, self.gameMode])
+			personalBest = glob.db.fetch("SELECT id, pp, score FROM scores WHERE userid = %s AND beatmap_md5 = %s AND play_mode = %s AND completed = 3 LIMIT 1", [userID, self.fileMd5, self.gameMode])
 			if personalBest is None:
 				# This is our first score on this map, so it's our best score
 				self.completed = 3
 				self.rankedScoreIncrease = self.score
 				self.oldPersonalBest = 0
 			else:
+				self.completed = 3
+				self.calculatePP()
 				# Compare personal best's score with current score
-				if self.score > personalBest["score"]:
+				if self.pp > personalBest["pp"]:
 					# New best score
 					self.completed = 3
 					self.rankedScoreIncrease = self.score-personalBest["score"]
@@ -250,13 +252,13 @@ class score:
 		"""
 		Calculate this score's pp value if completed == 3
 		"""
-		if self.completed == 3:
+		if self.completed == 3 and self.pp == 0:
 			# Create beatmap object
 			if b is None:
 				b = beatmap.beatmap(self.fileMd5, 0)
 
 			# Create an instance of the magic pp calculator and calculate pp
-			if b.rankedStatus >= rankedStatuses.RANKED and b.rankedStatus != rankedStatuses.UNKNOWN:
+			if b.rankedStatus in [rankedStatuses.RANKED, rankedStatuses.APPROVED]:
 				if self.gameMode == gameModes.STD:
 					fo = rippoppai.oppai(b, self)
 					self.pp = fo.pp

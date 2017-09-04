@@ -118,10 +118,17 @@ class handler(requestsManager.asyncRequestHandler):
 				s.calculatePP()
 
 			# Restrict obvious cheaters
-			if (s.pp >= 700 and s.gameMode == gameModes.STD) and restricted == False:
+			if (False and s.gameMode == gameModes.STD) and restricted == False:
 				userUtils.restrict(userID)
 				userUtils.appendNotes(userID, "Restricted due to too high pp gain ({}pp)".format(s.pp))
 				log.warning("**{}** ({}) has been restricted due to too high pp gain **({}pp)**".format(username, userID, s.pp), "cm")
+
+			# Restrict sunpy cheat
+			if s.mods & 8320 == 8320:
+				userUtils.restrict(userID)
+				userUtils.appendNotes(userID, "Restricted due to sunpy cheat")
+				log.warning("**{}** ({}) has been restricted due to sunpy cheat", "cm")
+				return
 
 			# Check notepad hack
 			if bmk is None and bml is None:
