@@ -231,7 +231,8 @@ class score:
 				else:
 					self.completed = 2
 					self.rankedScoreIncrease = 0
-					self.oldPersonalBest = 0
+					self.oldPersonalBest = 0i
+				self.pp = 0
 
 		log.debug("Completed status: {}".format(self.completed))
 
